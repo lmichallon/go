@@ -5,7 +5,8 @@ import (
 	"fmt"
 )
 
-// operer effectue l'opération demandée sur a et b
+// fait l'opération demandée sur a et b
+// retourne une erreur si l'opération est inconnue OU en cas de division par zéro
 func operer(a, b float64, operation string) (float64, error) {
 	switch operation {
 	case "+":
@@ -24,7 +25,7 @@ func operer(a, b float64, operation string) (float64, error) {
 	}
 }
 
-// retourne une closure pour l'opération donnée
+// retourne une closure qui applique l'opération donnée à deux nombres
 func creerOperation(operation string) func(float64, float64) float64 {
 	return func(a, b float64) float64 {
 		resultat, _ := operer(a, b, operation)
@@ -33,20 +34,33 @@ func creerOperation(operation string) func(float64, float64) float64 {
 }
 
 func main() {
-	fmt.Println("entrez : nombre opération nombre (ex: 10 5 +)")
+	fmt.Println("entrez : nombre opération nombre (ex: 10 + 5)")
 	fmt.Println("tapez 'quit' pour quitter.")
 
 	for {
-		var a, b float64
-		var operation string
+		// lit le premier token pour détecter "quit" avant de lire les nombres
+		var input string
+		fmt.Scan(&input)
 
-		fmt.Scan(&a, &b, &operation)
-
-		if operation == "quit" {
+		// si input est "quit" on quitte la boucle
+		if input == "quit" {
 			fmt.Println("au revoir !")
 			break
 		}
 
+		var a, b float64
+		var operation string
+		// utilise Sscan pour lire le nombre et laisser le reste de la ligne pour l'opération et le second nombre
+		_, err := fmt.Sscan(input, &a)
+		// si le premier token n'est pas un nombre, on affiche une erreur et on continue
+		if err != nil {
+			fmt.Println("format invalide. exemple : 10 + 5")
+			continue
+		}
+		// lit l'opération et le second nombre
+		fmt.Scan(&operation, &b)
+
+		// effectue l'opération et affiche le résultat ou l'erreur
 		resultat, err := operer(a, b, operation)
 		if err != nil {
 			fmt.Println("erreur :", err)
