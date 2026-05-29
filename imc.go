@@ -7,9 +7,11 @@ func main() {
 	const name = "Liswag"
 
 	// catégories d'IMC
-	const maigreur = 18.5
-	const normal = 25.0
-	const surpoids = 30.0
+	const (
+		maigreur = 18.5
+		normal   = 25.0
+		surpoids = 30.0
+	)
 
 	// variables poids et taille
 	var poids float64 = 70.5
@@ -22,7 +24,7 @@ func main() {
 	fmt.Printf("Bonjour %s !\n", name)
 	fmt.Printf("IMC : %.2f\n", imc)
 
-	// Affichage de la catégorie
+	// affichage de la catégorie
 	if imc < maigreur {
 		fmt.Println("Catégorie : Maigreur")
 	} else if imc < normal {
